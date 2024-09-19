@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LoginAuthSchema } from "../schemas";
+import { HospitalFormSchema, LoginAuthSchema } from "../schemas";
 
 // Auth Response variable and inference from schema
 // ----------------------------------------------------
@@ -64,4 +64,12 @@ interface IndividualHospitalResponse {
 interface IndividualHospitalVariables {
   id: number;
 }
+
+interface IndividualHospitalPostResponse {
+  status: number;
+  message: string;
+  data: Hospital[];
+}
+
+export type HospitalFormVariables = z.infer<typeof HospitalFormSchema>;
 //-------------------------------------------------------

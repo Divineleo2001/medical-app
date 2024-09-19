@@ -1,4 +1,5 @@
 import {z} from "zod"
+import {HospitalFormSchema} from "./hospitals"
 
 const LoginAuthSchema = z.object({
     username: z.string().min(2, "Username is required"),
@@ -7,4 +8,6 @@ const LoginAuthSchema = z.object({
   });
 
 
-export {LoginAuthSchema}
+
+
+export {LoginAuthSchema, HospitalFormSchema}
