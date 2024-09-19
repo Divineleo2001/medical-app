@@ -1,7 +1,8 @@
 // import { Navbar } from "@/modules/navigation/Navbar"
 
-import { Navbar } from "@/components/patient/Navbar";
-import { fetchMockSpecialities } from "@/server/patient/fetch-mock-specialities";
+import { Navbar } from "@/components/welcome/Navbar";
+import { fetchMockSpecialities } from "@/lib/server/patient";
+
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 
