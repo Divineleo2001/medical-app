@@ -1,5 +1,3 @@
-// import { Navbar } from "@/modules/navigation/Navbar"
-
 import { Navbar } from "@/components/welcome/Navbar";
 import { fetchMockSpecialities } from "@/lib/server/patient";
 
