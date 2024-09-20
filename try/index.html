@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Services Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        input, textarea {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+        }
+        .error {
+            color: red;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hospital Services Form</h1>
+    <form id="hospitalServicesForm">
+        <label for="serviceName">Service Name:</label>
+        <input type="text" id="serviceName" name="serviceName" required minlength="2">
+        <span id="serviceNameError" class="error"></span>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required minlength="2"></textarea>
+        <span id="descriptionError" class="error"></span>
+
+        <label for="baseImage">Base Image:</label>
+        <input type="file" id="baseImage" name="baseImage" accept="image/*" required>
+        <span id="baseImageError" class="error"></span>
+
+        <label for="iconImage">Icon Image:</label>
+        <input type="file" id="iconImage" name="iconImage" accept="image/*" required>
+        <span id="iconImageError" class="error"></span>
+
+        <label for="overview">Overview:</label>
+        <textarea id="overview" name="overview" required minlength="2"></textarea>
+        <span id="overviewError" class="error"></span>
+
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('hospitalServicesForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+            // Validate form
+            let isValid = true;
+            if (form.serviceName.value.length < 2) {
+                document.getElementById('serviceNameError').textContent = 'Service name must be at least 2 characters';
+                isValid = false;
+            }
+            if (form.description.value.length < 2) {
+                document.getElementById('descriptionError').textContent = 'Description must be at least 2 characters';
+                isValid = false;
+            }
+            if (form.overview.value.length < 2) {
+                document.getElementById('overviewError').textContent = 'Overview must be at least 2 characters';
+                isValid = false;
+            }
+            if (form.baseImage.files[0] && form.baseImage.files[0].size > 5000000) {
+                document.getElementById('baseImageError').textContent = 'Base image must be less than 5MB';
+                isValid = false;
+            }
+            if (form.iconImage.files[0] && form.iconImage.files[0].size > 1000000) {
+                document.getElementById('iconImageError').textContent = 'Icon image must be less than 1MB';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+                return;
+            }
+
+            const formData = new FormData();
+
+            // Add the JSON data
+            const hospitalServiceDTO = {
+                serviceName: form.serviceName.value,
+                description: form.description.value,
+                overview: form.overview.value
+            };
+            formData.append('hospitalServiceDTO', JSON.stringify(hospitalServiceDTO));
+
+            // Add the file data
+            formData.append('baseImage', form.baseImage.files[0]);
+            formData.append('iconImage', form.iconImage.files[0]);
+
+            try {
+                const response = await fetch('http://localhost:8006/api/hospital-services', {
+                    method: 'POST',
+                    headers: {
+                        'X-PrivateTenant': 'Tenant1',
+                        'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJST0xFIjoiQURNSU4iLCJURU5BTlQiOiJwdWJsaWMiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcyNjgzNzkzMSwiZXhwIjoxNzI2ODQxNTMxfQ.hoe9jlD9KZn5awGCh6PA7NaBHQlAwyjINUxB6joIEuI`,
+                        'accept': '*/*'
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Hospital service created successfully');
+                    form.reset();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+                alert('Failed to create hospital service. Please try again.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+            }
+        });
+    </script>
+</body>
+</html>

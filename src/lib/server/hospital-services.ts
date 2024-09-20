@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { cookies } from "next/headers";
+import { HospitalServicesFormVariables } from "../types";
 
 const url = process.env.BACKEND_URL + "/api/hospital-services";
 
@@ -25,40 +26,54 @@ export const getAllhosptialServices = async (tenantId: string) => {
   }
 };
 
+export const createHospitalService = async (
+  variables: HospitalServicesFormVariables
+) => {
+  const authToken = cookies().get("token")?.value;
 
+  try {
+    // Create a FormData object
 
-// export const createHospitalService = async (variables: any, baseImage: File, iconImage: File) => {
-//   try {
-//     // Create a FormData object
-//     const formData = new FormData();
+    const formData = new FormData();
 
-//     // Append JSON data as a string
-//     formData.append('hospitalServiceDTO', JSON.stringify({
-//       serviceName: variables.serviceName,
-//       description: variables.description,
-//       overview: variables.overview,
-//     }));
+    const payload = {
+      serviceName: variables.serviceName,
+      description: variables.description,
+      overview: variables.overview,
+    };
+    formData.append("serviceName", variables.serviceName);
+    formData.append("description", variables.description);
+    formData.append("overview", variables.overview);
+    formData.append("baseImage", variables.baseImage);
+    formData.append("iconImage", variables.iconImage);
 
-//     // Append images to formData
-//     formData.append('baseImage', baseImage);
-//     formData.append('iconImage', iconImage);
+    // Append JSON data as a string
 
-//     // Make the Axios request
-//     const { data } = await axios.post('http://localhost:8006/api/hospital-services', formData, {
-//       headers: {
-//         'Authorization': `Bearer ${variables.authToken}`,
-//         'X-PrivateTenant': 'Tenant1',
-//         'Content-Type': 'multipart/form-data',
-//       },
-//     });
+    // Append images to formData
 
-//     return data;
-//   } catch (error) {
-//     if (axios.isAxiosError(error)) {
-//       throw new Error(error.response?.data.message || "An error occurred");
-//     } else {
-//       throw new Error("Unexpected error");
-//     }
-//   }
-// };
+    // Make the Axios request
+    const { data } = await axios.post(
+      "http://192.168.2.113:8006/api/hospital-services",
+      {
+        ...variables,
+        baseImage: variables.baseImage,
+        iconImage: variables.iconImage,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-PrivateTenant": "Tenant1",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data.message || "An error occurred");
+    } else {
+      throw new Error("Unexpected error");
+    }
+  }
+};

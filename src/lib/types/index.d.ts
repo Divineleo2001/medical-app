@@ -1,6 +1,6 @@
 import { IndividualHospital } from './../server/hospitals';
 import { z } from "zod";
-import { HospitalFormSchema, LoginAuthSchema } from "../schemas";
+import { HospitalFormSchema, HospitalServicesFormSchema, LoginAuthSchema } from "../schemas";
 
 // Auth Response variable and inference from schema
 // ----------------------------------------------------
@@ -76,7 +76,6 @@ export type HospitalFormVariables = z.infer<typeof HospitalFormSchema>;
 //-------------------------------------------------------
 
 
-
 // Hospital Services response, variable and inference from schema
 // ----------------------------------------------------
 // All Hospital Services
@@ -112,9 +111,41 @@ interface IndividualHospitalServicesPostResponse {
   data: HospitalServices[] | null;
 }
 
-// export type HospitalServicesFormVariables = z.infer<typeof HospitalServicesFormSchema>;
+export type HospitalServicesFormVariables = z.infer<typeof HospitalServicesFormSchema>;
 
 //-------------------------------------------------------
+
+
+
+
+// User Categories response, variable and inference from schema
+// ----------------------------------------------------
+interface UserCategoriesResponse {
+  status: number;
+  message: string;
+  data: UserCateory[] | null;
+}
+
+// User category object type
+interface UserCategory {
+  id: number;
+  categoryName: "PATIENT" | "DOCTOR" | "TECHNICIAN" | "USER"; // Enum-like structure
+  status: boolean;
+}
+
+// Variables for individual user category operations (get/delete by ID)
+interface IndividualUserCategoryVariables {
+  id: number;
+}
+
+// Response for fetching a single user category
+interface IndividualUserCategoryResponse {
+  status: number;
+  message: string;
+  data: UserCategory | null;
+}
+
+// export type UserCategoryFormVariables = z.infer<typeof UserCategoryFormSchema>;
 
 
 // Department and internal treatments response, variable and inference from schema

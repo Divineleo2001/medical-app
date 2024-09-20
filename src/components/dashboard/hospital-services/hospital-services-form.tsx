@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Card,
@@ -26,31 +25,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { HospitalServicesFormVariables } from "@/lib/types";
+import { HospitalServicesFormSchema } from "@/lib/schemas";
+// import { useCreateHospitalServices } from "@/lib/api/hospital-services";
+import { useQueryClient } from "@tanstack/react-query";
+import { createHospitalService } from "@/lib/server/hospital-services";
 
-const HospitalServicesFormSchema = z.object({
-  serviceName: z
-    .string()
-    .min(2, { message: "Service name must be at least 2 characters" }),
-  description: z
-    .string()
-    .min(2, { message: "Description must be at least 2 characters" }),
-  baseImage: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5000000, `Max image size is 5MB.`),
-  iconImage: z
-    .instanceof(File)
-    .refine((file) => file.size <= 1000000, `Max icon size is 1MB.`),
-  overview: z
-    .string()
-    .min(2, { message: "Overview must be at least 2 characters" }),
-});
-
-type HospitalServicesFormValues = z.infer<typeof HospitalServicesFormSchema>;
-
-export default function HospitalServicesForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<HospitalServicesFormValues>({
+export default function HospitalServicesForm({
+  hospitalId,
+}: {
+  hospitalId: number;
+}) {
+  const queryClient = useQueryClient();
+  const form = useForm<HospitalServicesFormVariables>({
     resolver: zodResolver(HospitalServicesFormSchema),
     defaultValues: {
       serviceName: "",
@@ -59,56 +46,94 @@ export default function HospitalServicesForm() {
     },
   });
 
-  async function onSubmit(data: HospitalServicesFormValues) {
-    setIsSubmitting(true);
-    const formData = new FormData();
-    const { toast } = useToast();
+  // const { mutate: createHospitalServices, isPending } =
+  //   useCreateHospitalServices();
 
-    // Add the JSON data
-    const hospitalServiceDTO = {
-      serviceName: data.serviceName,
-      description: data.description,
-      overview: data.overview,
-    };
-    formData.append("hospitalServiceDTO", JSON.stringify(hospitalServiceDTO));
+  const onSubmit = async (data: HospitalServicesFormVariables) => {
 
-    // Add the file data
-    formData.append("baseImage", data.baseImage);
-    formData.append("iconImage", data.iconImage);
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8006/api/hospital-services",
-        formData,
-        {
-          headers: {
-            "X-PrivateTenant": "Tenant1",
-            accept: "*/*",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+   const {res} = await  createHospitalService(data)
+console.log(res)
+    // createHospitalServices(
+    //   {
+    //     ...payload,
+    //     baseImage: data.baseImage,
+    //     iconImage: data.iconImage,
+    //   },
+    //   {
+    //     onSuccess: (data) => {
+    //       queryClient.invalidateQueries({
+    //         queryKey: ["hospital-services"],
+    //       });
 
-      if (response.status === 200 || response.status === 201) {
-        toast({
-          title: "Success",
-          description: "Hospital service created successfully",
-        });
-        form.reset();
-      } else {
-        throw new Error("Submission failed");
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create hospital service. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+    //       if (data.status == 201) {
+    //         form.reset();
+    //         console.log(data);
+    //         // toast({
+    //         //   title: "Success",
+    //         //   description: "Hospital Service created successfully",
+    //         //   variant: "success",
+    //         // });
+    //       }
+    //     },
+    //     onError: (error) => {
+    //       console.log(error);
+    //     },
+    //   }
+    // );
+  };
+
+  // async function onSubmit(data: HospitalServicesFormVariables) {
+
+  //   const formData = new FormData();
+  //   const { toast } = useToast();
+
+  //   // Add the JSON data
+  //   const payload = {
+  //     serviceName: data.serviceName,
+  //     description: data.description,
+  //     overview: data.overview,
+  //   };
+  //   formData.append("payload", JSON.stringify(payload));
+
+  //   // Add the file data
+  //   formData.append("baseImage", data.baseImage);
+  //   formData.append("iconImage", data.iconImage);
+  //   console.log(formData)
+
+  //   // try {
+  //   //   const response = await axios.post(
+  //   //     "http://localhost:8006/api/hospital-services",
+  //   //     formData,
+  //   //     {
+  //   //       headers: {
+  //   //         "X-PrivateTenant": "Tenant1",
+  //   //         accept: "*/*",
+  //   //         "Content-Type": "multipart/form-data",
+  //   //       },
+  //   //     }
+  //   //   );
+
+  //   //   if (response.status === 200 || response.status === 201) {
+  //   //     toast({
+  //   //       title: "Success",
+  //   //       description: "Hospital service created successfully",
+  //   //     });
+  //   //     form.reset();
+  //   //   } else {
+  //   //     throw new Error("Submission failed");
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.error("An error occurred:", error);
+  //   //   toast({
+  //   //     title: "Error",
+  //   //     description: "Failed to create hospital service. Please try again.",
+  //   //     variant: "destructive",
+  //   //   });
+  //   // } finally {
+  //   //   setIsSubmitting(false);
+  //   // }
+  // }
 
   return (
     <Form {...form}>
@@ -209,9 +234,7 @@ export default function HospitalServicesForm() {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </Button>
+            <Button type="submit">Submit</Button>
           </CardFooter>
         </Card>
       </form>
