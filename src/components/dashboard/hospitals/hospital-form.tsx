@@ -20,14 +20,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-// import { HospitalAuthForm, LoginAuthForm } from "@/types/shared/type";
-
-// import { HospitalFormSchema } from "@/schemas/admin";
-// import { useCreateHospitals } from "@/api/shared/create-hospitals";
 import { useQueryClient } from "@tanstack/react-query";
 import { Hospital, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { HospitalFormSchema } from "@/lib/schemas";
 import { HospitalFormVariables } from "@/lib/types";
 import { useCreateHospitals } from "@/lib/api";
@@ -69,6 +65,8 @@ const HospitalForm = () => {
             queryKey: ["hospitals"],
           });
 
+          console.log(data)
+
           router.push("/dashboard/hospitals")
         },
         onError: (error) => {
@@ -83,7 +81,7 @@ const HospitalForm = () => {
     <>
       <Form {...form}>
         <form className="space-y-4 mx-auto" onSubmit={form.handleSubmit(onSubmit)}>
-          <Card className="w-[500px]">
+          <Card className="md:w-[500px]">
             <CardHeader>
               <CardTitle className="text-2xl">Login</CardTitle>
               <CardDescription>

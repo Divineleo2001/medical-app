@@ -1,3 +1,4 @@
+import { useGetAllHospitalService } from './hospital-services';
 import type { AxiosError } from 'axios';
 import { createMutation } from 'react-query-kit';
 import {  LoginAuthFormVariables, LoginAuthResponse } from '../types';
@@ -9,4 +10,7 @@ export const useGetToken = createMutation<LoginAuthResponse, LoginAuthFormVariab
 });
 
 
-export { useGetAllHospitals, useGetIndividualHospital, useCreateHospitals}
+export { useGetAllHospitals, useGetIndividualHospital, useCreateHospitals
+
+  ,useGetAllHospitalService
+}

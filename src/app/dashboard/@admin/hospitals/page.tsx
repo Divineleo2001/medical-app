@@ -1,5 +1,5 @@
 "use client";
-import HospitalList from "@/components/dashboard/hospitals/HospitalList";
+import HospitalList from "@/components/dashboard/hospitals/hospital-list";
 import Loading from "@/components/loading";
 import React, { Suspense } from "react";
 

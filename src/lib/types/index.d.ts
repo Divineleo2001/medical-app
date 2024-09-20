@@ -1,3 +1,4 @@
+import { IndividualHospital } from './../server/hospitals';
 import { z } from "zod";
 import { HospitalFormSchema, LoginAuthSchema } from "../schemas";
 
@@ -40,7 +41,7 @@ interface JwtAuthDecodeType {
 interface HospitalResponse {
   status: number;
   message: string;
-  data: Hospital[];
+  data: Hospital[] | null;
 }
 interface Hospital {
   createdBy: string;
@@ -59,7 +60,7 @@ interface Hospital {
 interface IndividualHospitalResponse {
   status: number;
   message: string;
-  data: Hospital[];
+  data: Hospital[] | null;
 }
 interface IndividualHospitalVariables {
   id: number;
@@ -68,8 +69,148 @@ interface IndividualHospitalVariables {
 interface IndividualHospitalPostResponse {
   status: number;
   message: string;
-  data: Hospital[];
+  data: Hospital[] | null;
 }
 
 export type HospitalFormVariables = z.infer<typeof HospitalFormSchema>;
 //-------------------------------------------------------
+
+
+
+// Hospital Services response, variable and inference from schema
+// ----------------------------------------------------
+// All Hospital Services
+interface HospitalServicesResponse {
+  status: number;
+  message: string;
+  data: HospitalServices[] | null;
+}
+
+interface HospitalServices {
+  id: number;
+  serviceName: string;
+  description: string;
+  baseImgUrl: string;
+  iconImgUrl: string;
+  overview: string;
+}
+
+// Individual Hospital Services 
+interface IndividualHospitalServicesResponse {
+  status: number;
+  message: string;
+  data: HospitalServices[] | null;
+}
+interface IndividualHospitalServicesVariables { 
+  id: number;
+}
+
+// Post Individual Hospital Services
+interface IndividualHospitalServicesPostResponse {
+  status: number;
+  message: string;
+  data: HospitalServices[] | null;
+}
+
+// export type HospitalServicesFormVariables = z.infer<typeof HospitalServicesFormSchema>;
+
+//-------------------------------------------------------
+
+
+// Department and internal treatments response, variable and inference from schema
+// ----------------------------------------------------
+// All Department
+interface Department {
+  id: number;
+  departmentName: string;
+  description: string;
+  serviceId: number;
+  baseImgUrl: string;
+  iconImgUrl: string;
+  overview: string;
+  treatments: Treatment[];
+  createdBy: string;
+  createdDate: string;
+  lastModifiedBy: string;
+  lastModifiedDate: string;
+}
+
+interface Treatment {
+  id: number;
+  departmentId: number;
+  treatmentName: string;
+  treatmentDescription: string;
+}
+
+interface DepartmentResponse {
+  status: number;
+  message: string;
+  data: Department[] | null;
+}
+
+interface IndividualDepartmentVariables {
+  id: number;
+}
+interface IndividualDepartmentResponse {
+  status: number;
+  message: string;
+  data: Department[] | null;
+}
+
+interface IndividualDepartmentPostResponse {
+  status: number;
+  message: string;
+  data: Department[] | null;
+}
+
+// export type DepartmentFormVariables = z.infer<typeof DepartmentFormSchema>;
+// -------------------------------------------------------
+
+// Users 
+// ----------------------------------------------------
+// User authority type
+interface UserAuthority {
+  authority: string;
+}
+
+// User object type
+interface User {
+  id: number;
+  username: string;
+  password: string;
+  gender: "MALE" | "FEMALE"; // Assuming only "MALE" or "FEMALE" are possible values
+  userCategoryId: number;
+  email: string;
+  phoneNumber: string;
+  oauthId: string;
+  status: boolean;
+  enabled: boolean;
+  emailVerified: boolean;
+  oauth: boolean;
+  authorities: UserAuthority[];
+  accountNonExpired: boolean;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+}
+
+// Response for fetching all users
+interface UsersResponse {
+  status: number;
+  message: string;
+  data: User[] | null;
+}
+
+// Variables for individual user operations (get/delete by ID)
+interface IndividualUserVariables {
+  id: number;
+}
+
+// Response for individual user operations (get/delete by ID)
+interface IndividualUserResponse {
+  status: number;
+  message: string;
+  data: User[] | null;
+}
+
+// export type UserFormVariables = z.infer<typeof UserFormSchema>;
+// -------------------------------------------------------

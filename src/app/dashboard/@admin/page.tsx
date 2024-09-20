@@ -1,14 +1,15 @@
 import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
-import React from "react";
+import Loading from "@/components/loading";
+import React, { Suspense } from "react";
 
 const AdminDashboardPage = () => {
   // const isTenantSet = cookies().has("tenant");
   // console.log(isTenantSet);
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       
       <AdminDashboard />
-    </div>
+    </Suspense>
   );
 };
 
