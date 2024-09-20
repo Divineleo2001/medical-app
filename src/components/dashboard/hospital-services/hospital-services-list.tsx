@@ -28,12 +28,13 @@ export default function HospitalServicesList({
     variables: { tenantId: hospitalData?.data?.[0]?.tenantId || "" },
     enabled: !!hospitalData?.data?.[0]?.tenantId,
   });
+  console.log(servicesData)
 
   const renderAlert = (status: number, title: string, description: string) => (
     <Alert
-    variant={
-      status >= 400 ? "destructive" : status >= 300 ? "default" : undefined
-    }
+      variant={
+        status >= 400 ? "destructive" : status >= 300 ? "default" : undefined
+      }
     >
       {status >= 400 ? (
         <AlertCircle className="h-4 w-4" />
@@ -115,25 +116,30 @@ export default function HospitalServicesList({
                 {!service.iconImgUrl ? (
                   <CogIcon className="h-6 w-6 text-blue-500" />
                 ) : (
-                  <Image
-                    src={service.iconImgUrl || ""}
-                    alt={`${service.serviceName} icon`}
-                    width={50}
-                    height={50}
-                    className="rounded-full w-[50px]"
-                  />
+                  <div className="rounded-full w-[50px]">
+                    {/* <Image
+                      src={service.iconImgUrl || ""}
+                      alt={`${service.serviceName} icon`}
+                      width={50}
+                      height={50}
+                      className="rounded-full w-[50px]"
+                    /> */}
+                  </div>
                 )}
                 <CardTitle>{service.serviceName}</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <Image
+              <div className="w-full h-48 object-cover mb-4 rounded-md bg-blue-500/40">
+                Service image Name
+              </div>
+              {/* <Image
                 src={service.baseImgUrl || ""}
                 alt={service.serviceName}
                 width={300}
                 height={200}
                 className="w-full h-48 object-cover mb-4 rounded-md bg-blue-500/40"
-              />
+              /> */}
               <p>{service.description}</p>
             </CardContent>
           </Card>

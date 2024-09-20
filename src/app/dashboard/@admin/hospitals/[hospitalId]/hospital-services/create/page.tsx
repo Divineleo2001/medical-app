@@ -1,4 +1,4 @@
-"use client"
+
 import HospitalServicesForm from "@/components/dashboard/hospital-services/hospital-services-form";
 import React from "react";
 
@@ -10,7 +10,7 @@ const HospitalServiceCreatePage = ({params}: {
   console.log(params.hospitalId)
   return (
     <div className="flex jusitfy-center items-center">
-      <HospitalServicesForm hospitalId={params.hospitalId} />
+      <HospitalServicesForm />
     </div>
   );
 };

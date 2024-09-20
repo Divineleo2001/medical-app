@@ -77,3 +77,22 @@ export const createHospitalService = async (
     }
   }
 };
+
+export async function submitHospitalService(data: FormData) {
+
+  const authToken = cookies().get("token")?.value;
+
+  const response = await fetch("http://192.168.2.113:8006/api/hospital-services", {
+    method: "POST",
+    headers: {
+      "X-PrivateTenant": "Tenant1",
+      "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJST0xFIjoiQURNSU4iLCJURU5BTlQiOiJwdWJsaWMiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcyNjg0MDA0NCwiZXhwIjoxNzI2ODQzNjQ0fQ.VkLl34iddBfgvUg1WKser6hFy3y2CxcOo3tXkNoXTjg`,
+      accept: "*/*",
+    },
+    body: data,
+  });
+
+ 
+
+  return response.json();
+}
